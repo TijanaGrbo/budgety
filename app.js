@@ -177,6 +177,7 @@ var UIController = (function() {
     },
 
     clearFields: function() {
+
       var fields, fieldsArr;
 
       fields = document.querySelectorAll(DOMStrings.inputDescription + ',' + DOMStrings.inputValue); // returns list
@@ -185,9 +186,11 @@ var UIController = (function() {
 
       fieldsArr.forEach(function(current, index, array) {
         current.value = '';
+
       });
 
       fieldsArr[0].focus();
+
     },
 
     displayBudget: function(obj) {
@@ -195,7 +198,9 @@ var UIController = (function() {
       document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc;
       document.querySelector(DOMStrings.expenseLabel).textContent = obj.totalExp;
       if(obj.percentage > 0 && obj.percentage <= 100) {
+
         document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%';
+
       } else {
         document.querySelector(DOMStrings.percentageLabel).textContent = '---';
       }
@@ -225,6 +230,7 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
     });
     
     document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+
   };
 
   var updateBudget = function() {
@@ -245,7 +251,17 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
     // 2. Read percentages from the budget controller
 
     // 3. Update the UI with the new percentages
+
   };
+
+  var updateBudget = function() {
+    // 1. Calculate the budget
+    budgetCtrl.calculateBudget();
+    // 2 Return the budget
+    var budget = budgetCtrl.getBudget();
+    // 3. Display the budget
+    UICtrl.displayBudget(budget);
+  }
 
   var ctrlAddItem = function() {
 
@@ -270,12 +286,13 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
 
     // 6. Calculate and update percentages
     updatePercentages();
-
     }
   };
 
   var ctrlDeleteItem = function(event) {
+
     var itemID, splitID, type, ID;
+
 
     itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
 
@@ -300,6 +317,7 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
 
       // 4. Update budget
       updatePercentages();
+
 
     }
 
