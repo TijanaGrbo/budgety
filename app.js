@@ -162,6 +162,29 @@ var UIController = (function() {
     expensesPercLabel: '.item__percentage',
   };
 
+  var formatNumber = function(num, type) {
+    var numSplit, int, dec, type;
+    /*
+    + or - before number 
+    exactly 2 decimal points
+    comma separating the thousands
+    */
+
+    num = Math.abs(num);
+    num = num.toFixed(2);
+
+    numSplit = num.split('.');
+    int = numSplit[0];
+    if (int.length > 3) {
+      int = int.substr(0, int.length - 3) + ',' + int.substr(int.length - 3, int.length);
+    }
+
+    dec = numSplit[1];
+
+    return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
+
+ };
+
   return {
     getInput: function() {
       return {
@@ -187,7 +210,7 @@ var UIController = (function() {
 
       newHtml = html.replace('%id%', obj.id);
       newHtml = newHtml.replace('%description%', obj.description);
-      newHtml = newHtml.replace('%value%', obj.value);
+      newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
       // insert html into the dom
 
@@ -217,9 +240,13 @@ var UIController = (function() {
     },
 
     displayBudget: function(obj) {
-      document.querySelector(DOMStrings.budgetLabel).textContent = obj.budget;
-      document.querySelector(DOMStrings.incomeLabel).textContent = obj.totalInc;
-      document.querySelector(DOMStrings.expenseLabel).textContent = obj.totalExp;
+
+      var type;
+      obj.budget > 0 ? type = 'inc' : type = 'exp';
+
+      document.querySelector(DOMStrings.budgetLabel).textContent = formatNumber(obj.budget, type);
+      document.querySelector(DOMStrings.incomeLabel).textContent = formatNumber(obj.totalInc, type);
+      document.querySelector(DOMStrings.expenseLabel).textContent = formatNumber(obj.totalExp, type);
       if(obj.percentage > 0 && obj.percentage <= 100) {
 
         document.querySelector(DOMStrings.percentageLabel).textContent = obj.percentage + '%';
@@ -349,14 +376,11 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
     itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
 
     if(itemID) {
-
-      console.log(itemID);
       
       //inc-1
       splitID = itemID.split('-');
       type = splitID[0];
       ID = parseInt(splitID[1]);
-      console.log(type);
 
       // 1. delete the item from the data
       budgetCtrl.deleteItem(type, ID);
