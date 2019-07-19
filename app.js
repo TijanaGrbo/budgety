@@ -160,6 +160,7 @@ var UIController = (function() {
     percentageLabel: '.budget__expenses--percentage',
     container: '.container',
     expensesPercLabel: '.item__percentage',
+    dateLabel: '.budget__title--month',
   };
 
   var formatNumber = function(num, type) {
@@ -285,6 +286,28 @@ var UIController = (function() {
       // });
     },
 
+    displayMonth: function() {
+      var now, year, month; 
+
+      now = new Date();
+      year = now.getFullYear();
+      months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      month = now.getMonth();
+
+      document.querySelector(DOMStrings.dateLabel).textContent = months[month] + ' ' + year;
+    },
+
+    changedType: function() {
+      var fields = document.querySelectorAll(
+        DOMStrings.inputType + ',' +
+        DOMStrings.inputDescription + ',' +
+        DOMStrings.inputValue);
+
+        Array.from(fields).forEach(el => {
+          el.classList.toggle('red-focus');
+        })
+    },
+
     getDOMStrings: function() {
       return DOMStrings;
     }
@@ -310,6 +333,7 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
     
     document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
 
+    document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
   };
 
   var updateBudget = function() {
@@ -400,6 +424,7 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
 
   return {
     init: function() {
+      UICtrl.displayMonth();
       UICtrl.displayBudget({
         budget: 0,
         totalInc: 0,
