@@ -8,7 +8,12 @@ var budgetController = (function() {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
   };
+
+  Expense.prototype.calcPercentage = function(totalIncome) {
+    this.percentage = Math.round((this.value / totalIncome) * 100);
+  } 
 
   var Income = function(id, description, value) {
     this.id = id;
@@ -317,7 +322,6 @@ var controller = (function(budgetCtrl, UICtrl) { // change the controller names 
 
       // 4. Update budget
       updatePercentages();
-
 
     }
 
